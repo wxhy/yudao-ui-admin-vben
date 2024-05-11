@@ -2,7 +2,7 @@
 import { Upload } from 'ant-design-vue'
 import { computed, reactive, ref, unref, watch } from 'vue'
 import { Icon } from '@/components/Icon'
-import { getAccessToken, getTenantId } from '@/utils/auth'
+import { getAccessToken } from '@/utils/auth'
 import { propTypes } from '@/utils/propTypes'
 import { useMessage } from '@/hooks/web/useMessage'
 import { createImgPreview } from '@/components/Preview/index'
@@ -44,8 +44,7 @@ const { createMessage, createConfirm } = useMessage()
 const { prefixCls } = useDesign('upload')
 const attrs = useAttrs()
 const headers = reactive({
-  'Authorization': `Bearer ${getAccessToken()}`,
-  'tenant-id': getTenantId(),
+  Authorization: `Bearer ${getAccessToken()}`,
 })
 const fileList = ref<any[]>([])
 const uploadGoOn = ref<boolean>(true)

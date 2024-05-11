@@ -13,7 +13,7 @@ import { useGlobSetting } from '@/hooks/setting'
 import { useMessage } from '@/hooks/web/useMessage'
 import { ContentTypeEnum, RequestEnum, ResultEnum } from '@/enums/httpEnum'
 import { isEmpty, isNull, isString, isUndefined } from '@/utils/is'
-import { getAccessToken, getTenantId } from '@/utils/auth'
+import { getAccessToken } from '@/utils/auth'
 import { deepMerge, setObjToUrlParams } from '@/utils'
 import { useErrorLogStoreWithOut } from '@/store/modules/errorLog'
 import { useI18n } from '@/hooks/web/useI18n'
@@ -22,7 +22,6 @@ import { AxiosRetry } from '@/utils/http/axios/axiosRetry'
 
 const globSetting = useGlobSetting()
 const urlPrefix = globSetting.urlPrefix
-const tenantEnable = globSetting.tenantEnable
 const { createMessage, createErrorModal, createSuccessModal } = useMessage()
 
 // 请求白名单，无须token的接口
@@ -199,12 +198,6 @@ const transform: AxiosTransform = {
       (config as Recordable).headers.Authorization = options.authenticationScheme
         ? `${options.authenticationScheme} ${token}`
         : token
-    }
-    // 设置租户
-    if (tenantEnable && tenantEnable === 'true') {
-      const tenantId = getTenantId()
-      if (tenantId)
-        (config as Recordable).headers['tenant-id'] = tenantId
     }
     return config
   },

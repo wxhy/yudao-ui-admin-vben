@@ -10,10 +10,9 @@ import { useUserStore } from '@/store/modules/user'
 import { usePermissionStore } from '@/store/modules/permission'
 import { useGlobSetting } from '@/hooks/setting'
 import { useDesign } from '@/hooks/web/useDesign'
-import * as authUtil from '@/utils/auth'
 
 import { Verify } from '@/components/Verifition'
-import { getTenantIdByName, sendSmsCode } from '@/api/base/login'
+import { sendSmsCode } from '@/api/base/login'
 
 const FormItem = Form.Item
 
@@ -21,7 +20,7 @@ const { t } = useI18n()
 const { prefixCls } = useDesign('login')
 const { createMessage, notification, createErrorModal } = useMessage()
 const { handleBackLogin, getLoginState } = useLoginState()
-const { tenantEnable, captchaEnable } = useGlobSetting()
+const { captchaEnable } = useGlobSetting()
 const { getFormRules } = useFormRules()
 const userStore = useUserStore()
 const permissionStore = usePermissionStore()
@@ -36,7 +35,6 @@ const verify = ref()
 const captchaType = ref('blockPuzzle') // blockPuzzle 滑块 clickWord 点击文字
 
 const formData = reactive({
-  tenantName: '芋道源码',
   mobile: '',
   mobileCode: '',
   captchaVerification: '',
@@ -56,14 +54,6 @@ async function getCode() {
     // 情况二，已开启：则展示验证码；只有完成验证码的情况，才进行登录
     // 弹出验证码
     verify.value.show()
-  }
-}
-
-// 获取租户ID
-async function getTenantId() {
-  if (tenantEnable === 'true') {
-    const res = await getTenantIdByName(formData.tenantName)
-    authUtil.setTenantId(res)
   }
 }
 
@@ -100,7 +90,6 @@ async function handleLogin() {
 }
 
 async function getSmsCode() {
-  await getTenantId()
   if (mobileCodeTimer.value > 0)
     return
   const data = await validForm()
@@ -118,15 +107,6 @@ async function getSmsCode() {
   <div v-if="getShow">
     <LoginFormTitle class="enter-x" />
     <Form ref="formRef" class="enter-x p-4" :model="formData" :rules="getFormRules">
-      <FormItem name="tenantName" class="enter-x">
-        <Input
-          v-if="tenantEnable === 'true'"
-          v-model:value="formData.tenantName"
-          size="large"
-          :placeholder="t('sys.login.tenantName')"
-          class="fix-auto-fill"
-        />
-      </FormItem>
       <FormItem name="mobile" class="enter-x">
         <Input v-model:value="formData.mobile" size="large" :placeholder="t('sys.login.mobile')" class="fix-auto-fill" />
       </FormItem>

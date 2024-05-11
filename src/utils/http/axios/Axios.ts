@@ -15,7 +15,7 @@ import type { RequestOptions, Result, UploadFileParams } from '@/types/axios'
 import { ContentTypeEnum, RequestEnum } from '@/enums/httpEnum'
 import { downloadByData } from '@/utils/file/download'
 import { useGlobSetting } from '@/hooks/setting'
-import { getRefreshToken, getTenantId, setAccessToken } from '@/utils/auth'
+import { getRefreshToken, setAccessToken } from '@/utils/auth'
 
 export * from './axiosTransform'
 
@@ -55,7 +55,6 @@ export class VAxios {
   }
 
   refreshToken() {
-    axios.defaults.headers.common['tenant-id'] = getTenantId() as number
     const refreshToken = getRefreshToken()
     return axios.post(`${globSetting.apiUrl}/system/auth/refresh-token?refreshToken=${refreshToken}`)
   }

@@ -3,7 +3,3 @@ export interface UserLoginVO {
   password: string
   captchaVerification: string
 }
-
-export interface TentantNameVO {
-  id: number
-}

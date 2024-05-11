@@ -11,7 +11,6 @@ import type {
   PROJ_CFG_KEY,
   REFRESH_TOKEN_KEY,
   ROLES_KEY,
-  TENANT_ID_KEY,
 } from '@/enums/cacheEnum'
 import {
   ACCESS_TOKEN_KEY,
@@ -25,7 +24,6 @@ import { DEFAULT_CACHE_TIME } from '@/settings/encryptionSetting'
 interface BasicStore {
   [ACCESS_TOKEN_KEY]: string | number | null | undefined
   [REFRESH_TOKEN_KEY]: string | number | null | undefined
-  [TENANT_ID_KEY]: number | null | undefined
   [USER_INFO_KEY]: UserInfo
   [ROLES_KEY]: string[]
   [LOCK_INFO_KEY]: LockInfo

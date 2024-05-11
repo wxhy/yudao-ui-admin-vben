@@ -1,11 +1,9 @@
-import type { TentantNameVO } from './model/loginModel'
 import { defHttp } from '@/utils/http/axios'
 import { getRefreshToken } from '@/utils/auth'
 
 enum Api {
   Login = '/system/auth/login',
   RefreshToken = '/system/auth/refresh-token?refreshToken=',
-  GetTenantIdByName = '/system/tenant/get-id-by-name?name=',
   LoginOut = '/system/auth/logout',
   GetUserInfo = '/system/auth/get-permission-info',
   GetCaptcha = '/system/captcha/get',
@@ -16,16 +14,6 @@ enum Api {
 export function refreshToken() {
   const refreshToken: string = getRefreshToken()
   return defHttp.post({ url: Api.RefreshToken + refreshToken })
-}
-
-// 使用租户名，获得租户编号
-export function getTenantIdByName(name: string) {
-  return defHttp.get<TentantNameVO>({ url: Api.GetTenantIdByName + name })
-}
-
-// 使用租户域名，获得租户信息
-export function getTenantByWebsite(website: string) {
-  return defHttp.get({ url: `/system/tenant/get-by-website?website=${website}` })
 }
 
 // 登出

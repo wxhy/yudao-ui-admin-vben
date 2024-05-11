@@ -4,7 +4,7 @@ import { Upload } from 'ant-design-vue'
 import { useDesign } from '@/hooks/web/useDesign'
 import { useGlobSetting } from '@/hooks/setting'
 import { useI18n } from '@/hooks/web/useI18n'
-import { getAccessToken, getTenantId } from '@/utils/auth'
+import { getAccessToken } from '@/utils/auth'
 
 defineOptions({ name: 'TinymceImageUpload' })
 
@@ -19,8 +19,7 @@ const props = defineProps({
 })
 const emit = defineEmits(['uploading', 'done', 'error'])
 const headers = reactive({
-  'Authorization': `Bearer ${getAccessToken()}`,
-  'tenant-id': getTenantId(),
+  Authorization: `Bearer ${getAccessToken()}`,
 })
 let uploading = false
 

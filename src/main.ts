@@ -15,8 +15,6 @@ import { setupGlobDirectives } from '@/directives'
 import { setupI18n } from '@/locales/setupI18n'
 import { registerGlobComp } from '@/components/registerGlobComp'
 
-import '@/utils/tongji'
-
 async function bootstrap() {
   const app = createApp(App)
 

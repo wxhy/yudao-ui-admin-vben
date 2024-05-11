@@ -7,7 +7,7 @@ import { IconEnum } from '@/enums/appEnum'
 import { BasicUpload } from '@/components/Upload'
 import { BasicTable, TableAction, useTable } from '@/components/Table'
 import { deleteFile, getFilePage } from '@/api/infra/file'
-import { getAccessToken, getTenantId } from '@/utils/auth'
+import { getAccessToken } from '@/utils/auth'
 import { copyText } from '@/utils/copyTextToClipboard'
 import { uploadApi } from '@/api/base/upload'
 import { DocAlert } from '@/components/DocAlert'
@@ -18,8 +18,7 @@ const { t } = useI18n()
 const { createMessage } = useMessage()
 
 const uploadParams = ref({
-  'Authorization': `Bearer ${getAccessToken()}`,
-  'tenant-id': getTenantId(),
+  Authorization: `Bearer ${getAccessToken()}`,
 })
 
 const [registerTable, { reload }] = useTable({
