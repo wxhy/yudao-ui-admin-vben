@@ -52,7 +52,7 @@ async function handleSubmit() {
 </script>
 
 <template>
-  <BasicModal v-bind="$attrs" title="修改用户等级" @register="registerModal" @ok="handleSubmit">
+  <BasicModal v-bind="$attrs" title="修改用户等级" :minHeight="150" @register="registerModal" @ok="handleSubmit">
     <BasicForm @register="registerForm" />
   </BasicModal>
 </template>

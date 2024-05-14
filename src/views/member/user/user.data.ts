@@ -160,6 +160,7 @@ export const formSchema: FormSchema[] = [
     component: 'ApiSelect',
     required: true,
     componentProps: {
+      disabled: ({ values }) => !values.id,
       placeholder: '请选择会员等级',
       api: () => getSimpleLevelList(),
       labelField: 'name',
@@ -176,8 +177,9 @@ export const formSchema: FormSchema[] = [
       message: '请选择会员到期时间',
     }],
     componentProps: {
+      disabled: ({ values }) => !values.id,
       placeholder: '请选择会员到期时间',
-      class: 'w-1/1',
+      class: 'w-full',
       disabledDate: (current: Dayjs) => {
         return current && current < dayjs().endOf('day')
       },
@@ -250,8 +252,20 @@ export const updateLevelFormSchema: FormSchema[] = [
     component: 'Input',
   },
   {
+    label: '账号',
+    field: 'username',
+    dynamicDisabled: true,
+    component: 'Input',
+  },
+  {
     label: '用户昵称',
     field: 'nickname',
+    dynamicDisabled: true,
+    component: 'Input',
+  },
+  {
+    label: '手机号',
+    field: 'mobile',
     dynamicDisabled: true,
     component: 'Input',
   },
@@ -275,8 +289,8 @@ export const updateLevelFormSchema: FormSchema[] = [
 
 export const userBasicInfoDesc: DescItem[] = [
   {
-    label: '用户名',
-    field: 'name',
+    label: '账号',
+    field: 'username',
   },
   {
     label: '昵称',
@@ -298,15 +312,22 @@ export const userBasicInfoDesc: DescItem[] = [
     field: 'areaName',
   },
   {
-    label: '注册 IP',
-    field: 'registerIp',
+    label: '会员等级',
+    field: 'levelName',
+    render: (curVal) => {
+      return useRender.renderTag(curVal, '#2a7dc9')
+    },
   },
   {
-    label: '生日',
-    field: 'birthday',
+    label: '会员到期时间',
+    field: 'expireTime',
     render: (curVal) => {
       return useRender.renderDate(curVal)
     },
+  },
+  {
+    label: '注册 IP',
+    field: 'registerIp',
   },
   {
     label: '注册时间',

@@ -54,7 +54,7 @@ async function handleSubmit() {
 <template>
   <BasicModal
     v-bind="$attrs" :title="isUpdate ? t('action.edit') : t('action.create')"
-    :use-wrapper="false" :height="300"
+    :use-wrapper="false" :minHeight="300"
     @register="registerModal" @ok="handleSubmit"
   >
     <BasicForm @register="registerForm" />

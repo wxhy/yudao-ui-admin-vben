@@ -30,12 +30,12 @@ export const columns: BasicColumn[] = [
     dataIndex: 'level',
   },
   {
-    title: '升级经验',
-    dataIndex: 'experience',
+    title: '特别关注数量',
+    dataIndex: 'watchCount',
   },
   {
-    title: '享受折扣(%)',
-    dataIndex: 'discountPercent',
+    title: '价格(元)',
+    dataIndex: 'price',
   },
   {
     title: '状态',
@@ -91,14 +91,14 @@ export const formSchema: FormSchema[] = [
     component: 'InputNumber',
   },
   {
-    label: '升级经验',
-    field: 'experience',
+    label: '特别关注数量',
+    field: 'watchCount',
     required: true,
     component: 'InputNumber',
   },
   {
-    label: '享受折扣(%)',
-    field: 'discountPercent',
+    label: '价格',
+    field: 'price',
     required: true,
     component: 'InputNumber',
   },

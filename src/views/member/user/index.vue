@@ -1,11 +1,10 @@
 <script lang="ts" setup>
 import UserModal from './UserModal.vue'
-import UserDetailDrawer from './UserDetailDrawer.vue'
+import UserDetailDrawer from './UserDetailModal.vue'
 import UpdateLevelModal from './UpdateLevelModal.vue'
 import { columns, searchFormSchema } from './user.data'
 import { useI18n } from '@/hooks/web/useI18n'
 import { useModal } from '@/components/Modal'
-import { useDrawer } from '@/components/Drawer'
 import { IconEnum } from '@/enums/appEnum'
 import { BasicTable, TableAction, useTable } from '@/components/Table'
 import type { UserExportReqVO } from '@/api/member/user'
@@ -18,8 +17,8 @@ defineOptions({ name: 'MemberUser' })
 const { t } = useI18n()
 const { createConfirm, createMessage } = useMessage()
 const [registerModal, { openModal }] = useModal()
-const [registerDetailDrawer, { openDrawer }] = useDrawer()
 const [registerUpdateLevelModal, { openModal: openUpdateLevelModal }] = useModal()
+const [registerDetailModal, { openModal: openDetailModal }] = useModal()
 const [registerTable, { getForm, reload }] = useTable({
   title: '会员列表',
   api: getUserPage,
@@ -37,7 +36,7 @@ const [registerTable, { getForm, reload }] = useTable({
 })
 
 function handleDetail(record: Recordable) {
-  openDrawer(true, record)
+  openDetailModal(true, { record })
 }
 
 function handleEdit(record: Recordable) {
@@ -86,6 +85,8 @@ async function handleExport() {
             :actions="[
               { icon: IconEnum.VIEW, label: t('action.detail'), auth: 'member:user:update', onClick: handleDetail.bind(null, record) },
               { icon: IconEnum.EDIT, label: t('action.edit'), auth: 'member:user:update', onClick: handleEdit.bind(null, record) },
+            ]"
+            :drop-down-actions="[
               { icon: IconEnum.EDIT, label: '修改等级', auth: 'member:user:update-level', onClick: updateLevelFormRef.bind(null, record) },
             ]"
           />
@@ -94,6 +95,6 @@ async function handleExport() {
     </BasicTable>
     <UserModal @register="registerModal" @success="reload()" />
     <UpdateLevelModal @register="registerUpdateLevelModal" @success="reload()" />
-    <UserDetailDrawer @register="registerDetailDrawer" />
+    <UserDetailDrawer @register="registerDetailModal" />
   </div>
 </template>
