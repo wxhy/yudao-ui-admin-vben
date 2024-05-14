@@ -5,6 +5,7 @@ import progress from 'vite-plugin-progress'
 import purgeIcons from 'vite-plugin-purge-icons'
 import VitePluginCertificate from 'vite-plugin-mkcert'
 import UnoCSS from 'unocss/vite'
+import WindiCSS from 'vite-plugin-windicss'
 import { configPwaConfig } from './pwa'
 import { configHtmlPlugin } from './html'
 import { configCompressPlugin } from './compress'
@@ -48,6 +49,9 @@ export function createVitePlugins(viteEnv: ViteEnv, isBuild: boolean) {
     // vite-plugin-pwa
     vitePlugins.push(configPwaConfig(viteEnv))
   }
+
+  // wind css
+  vitePlugins.push(WindiCSS())
 
   return vitePlugins
 }

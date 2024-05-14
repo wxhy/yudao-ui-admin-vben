@@ -5,7 +5,7 @@ import { useI18n } from '@/hooks/web/useI18n'
 import { useMessage } from '@/hooks/web/useMessage'
 import { BasicForm, useForm } from '@/components/Form'
 import { BasicModal, useModalInner } from '@/components/Modal'
-import { getUser, updateUser } from '@/api/member/user'
+import { createUser, getUser, updateUser } from '@/api/member/user'
 
 defineOptions({ name: 'MemberUserModal' })
 
@@ -16,7 +16,7 @@ const isUpdate = ref(true)
 
 const [registerForm, { setFieldsValue, resetFields, validate }] = useForm({
   labelWidth: 120,
-  baseColProps: { span: 24 },
+  baseColProps: { span: 12 },
   schemas: formSchema,
   showActionButtonGroup: false,
   actionColOptions: { span: 23 },
@@ -38,8 +38,8 @@ async function handleSubmit() {
     setModalProps({ confirmLoading: true })
     if (unref(isUpdate))
       await updateUser(values)
-    // else
-    //   await createUser(values)
+    else
+      await createUser(values)
 
     closeModal()
     emit('success')
@@ -52,7 +52,11 @@ async function handleSubmit() {
 </script>
 
 <template>
-  <BasicModal v-bind="$attrs" :title="isUpdate ? t('action.edit') : t('action.create')" @register="registerModal" @ok="handleSubmit">
+  <BasicModal
+    v-bind="$attrs" :title="isUpdate ? t('action.edit') : t('action.create')"
+    :use-wrapper="false" :height="300"
+    @register="registerModal" @ok="handleSubmit"
+  >
     <BasicForm @register="registerForm" />
   </BasicModal>
 </template>

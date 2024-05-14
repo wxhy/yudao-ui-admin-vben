@@ -1,6 +1,7 @@
 import 'uno.css'
 import 'ant-design-vue/dist/reset.css'
 import './design/index.less'
+import 'virtual:windi.css'
 
 // Register icon sprite
 import 'virtual:svg-icons-register'

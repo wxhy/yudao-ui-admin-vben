@@ -1,6 +1,6 @@
-import { getSimpleGroupList } from '@/api/member/group'
+import type { Dayjs } from 'dayjs'
+import dayjs from 'dayjs'
 import { getSimpleLevelList } from '@/api/member/level'
-import { getSimpleTagList } from '@/api/member/tag'
 import { getAreaTree } from '@/api/system/area'
 import type { DescItem } from '@/components/Description'
 import type { BasicColumn, FormSchema } from '@/components/Table'
@@ -11,6 +11,16 @@ export const columns: BasicColumn[] = [
   {
     title: '用户编号',
     dataIndex: 'id',
+    width: 100,
+  },
+  {
+    title: '账号',
+    dataIndex: 'username',
+    width: 100,
+  },
+  {
+    title: '昵称',
+    dataIndex: 'nickname',
     width: 100,
   },
   {
@@ -27,31 +37,8 @@ export const columns: BasicColumn[] = [
     width: 100,
   },
   {
-    title: '昵称',
-    dataIndex: 'nickname',
-    width: 100,
-  },
-  {
     title: '等级',
     dataIndex: 'levelName',
-    width: 100,
-  },
-  {
-    title: '分组',
-    dataIndex: 'groupName',
-    width: 100,
-  },
-  {
-    title: '用户标签',
-    dataIndex: 'tagNames',
-    width: 100,
-    customRender: ({ text }) => {
-      return useRender.renderTags(text)
-    },
-  },
-  {
-    title: '积分',
-    dataIndex: 'point',
     width: 100,
   },
   {
@@ -104,33 +91,11 @@ export const searchFormSchema: FormSchema[] = [
     colProps: { span: 8 },
   },
   {
-    label: '用户标签',
-    field: 'tagIds',
-    component: 'ApiSelect',
-    componentProps: {
-      api: () => getSimpleTagList(),
-      labelField: 'name',
-      valueField: 'id',
-    },
-    colProps: { span: 8 },
-  },
-  {
     label: '用户等级',
     field: 'levelId',
     component: 'ApiSelect',
     componentProps: {
       api: () => getSimpleLevelList(),
-      labelField: 'name',
-      valueField: 'id',
-    },
-    colProps: { span: 8 },
-  },
-  {
-    label: '用户分组',
-    field: 'groupId',
-    component: 'ApiSelect',
-    componentProps: {
-      api: () => getSimpleGroupList(),
       labelField: 'name',
       valueField: 'id',
     },
@@ -146,23 +111,111 @@ export const formSchema: FormSchema[] = [
     component: 'Input',
   },
   {
-    label: '手机号',
-    field: 'mobile',
+    label: '账号',
+    field: 'username',
     required: true,
     component: 'Input',
-  },
-  {
-    label: '状态',
-    field: 'status',
-    component: 'Select',
     componentProps: {
-      options: getDictOptions(DICT_TYPE.COMMON_STATUS),
+      placeholder: '请输入登录账号',
     },
   },
   {
     label: '用户昵称',
     field: 'nickname',
+    required: true,
     component: 'Input',
+    componentProps: {
+      placeholder: '请输入用户昵称',
+    },
+  },
+  {
+    label: '手机号',
+    field: 'mobile',
+    required: true,
+    component: 'Input',
+    componentProps: {
+      placeholder: '请输入手机号',
+    },
+    rules: [
+      {
+        pattern: /^1[3-9]\d{9}$/,
+        message: '手机号格式不正确',
+        trigger: ['change', 'blur'],
+      },
+    ],
+  },
+  {
+    label: '密码',
+    field: 'password',
+    required: true,
+    component: 'InputPassword',
+    componentProps: {
+      placeholder: '请输入登录密码',
+    },
+    ifShow: ({ values }) => !values.id,
+  },
+  {
+    label: '会员等级',
+    field: 'levelId',
+    component: 'ApiSelect',
+    required: true,
+    componentProps: {
+      placeholder: '请选择会员等级',
+      api: () => getSimpleLevelList(),
+      labelField: 'name',
+      valueField: 'id',
+    },
+  },
+  {
+    label: '会员有效期',
+    field: 'expireTime',
+    component: 'DatePicker',
+    required: true,
+    rules: [{
+      required: true,
+      message: '请选择会员到期时间',
+    }],
+    componentProps: {
+      placeholder: '请选择会员到期时间',
+      class: 'w-1/1',
+      disabledDate: (current: Dayjs) => {
+        return current && current < dayjs().endOf('day')
+      },
+    },
+  },
+  {
+    label: '用户性别',
+    field: 'sex',
+    component: 'Select',
+    required: true,
+    defaultValue: 0,
+    componentProps: {
+      placeholder: '请选择用户性别',
+      options: getDictOptions(DICT_TYPE.SYSTEM_USER_SEX),
+    },
+  },
+  {
+    label: '所在地',
+    field: 'areaId',
+    required: true,
+    component: 'ApiTreeSelect',
+    componentProps: {
+      placeholder: '请选择用户所在地',
+      api: () => getAreaTree(),
+      handleTree: 'id',
+    },
+
+  },
+  {
+    label: '状态',
+    field: 'status',
+    component: 'Select',
+    required: true,
+    componentProps: {
+      placeholder: '请选择用户状态',
+      options: getDictOptions(DICT_TYPE.COMMON_STATUS),
+    },
+    defaultValue: 0,
   },
   {
     label: '用户头像',
@@ -172,61 +225,20 @@ export const formSchema: FormSchema[] = [
       maxCount: 1,
       fileType: 'image',
     },
-  },
-  {
-    label: '真实名字',
-    field: 'name',
-    component: 'Input',
-  },
-  {
-    label: '用户性别',
-    field: 'sex',
-    component: 'Select',
-    componentProps: {
-      options: getDictOptions(DICT_TYPE.SYSTEM_USER_SEX),
-    },
-  },
-  {
-    label: '出生日期',
-    field: 'birthday',
-    component: 'DatePicker',
-    componentProps: {
-      valueFormat: 'x',
-    },
-  },
-  {
-    label: '所在地',
-    field: 'areaId',
-    component: 'ApiTreeSelect',
-    componentProps: {
-      api: () => getAreaTree(),
-      handleTree: 'id',
-    },
-  },
-  {
-    label: '用户标签',
-    field: 'tagIds',
-    component: 'ApiSelect',
-    componentProps: {
-      api: () => getSimpleTagList(),
-      labelField: 'name',
-      valueField: 'id',
-    },
-  },
-  {
-    label: '用户分组',
-    field: 'groupId',
-    component: 'ApiSelect',
-    componentProps: {
-      api: () => getSimpleGroupList(),
-      labelField: 'name',
-      valueField: 'id',
+    colProps: {
+      span: 24,
     },
   },
   {
     label: '会员备注',
     field: 'mark',
     component: 'InputTextArea',
+    colProps: {
+      span: 24,
+    },
+    componentProps: {
+      placeholder: '请输入用户备注',
+    },
   },
 ]
 

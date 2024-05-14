@@ -8,16 +8,19 @@ import { useModal } from '@/components/Modal'
 import { useDrawer } from '@/components/Drawer'
 import { IconEnum } from '@/enums/appEnum'
 import { BasicTable, TableAction, useTable } from '@/components/Table'
-import { getUserPage } from '@/api/member/user'
+import type { UserExportReqVO } from '@/api/member/user'
+import { exportUser, getUserPage } from '@/api/member/user'
 import { DocAlert } from '@/components/DocAlert'
+import { useMessage } from '@/hooks/web/useMessage'
 
 defineOptions({ name: 'MemberUser' })
 
 const { t } = useI18n()
+const { createConfirm, createMessage } = useMessage()
 const [registerModal, { openModal }] = useModal()
 const [registerDetailDrawer, { openDrawer }] = useDrawer()
 const [registerUpdateLevelModal, { openModal: openUpdateLevelModal }] = useModal()
-const [registerTable, { reload }] = useTable({
+const [registerTable, { getForm, reload }] = useTable({
   title: '会员列表',
   api: getUserPage,
   columns,
@@ -44,6 +47,24 @@ function handleEdit(record: Recordable) {
 function updateLevelFormRef(record: Recordable) {
   openUpdateLevelModal(true, { record, isUpdate: true })
 }
+
+/** 新增按钮操作 */
+function handleCreate() {
+  openModal(true, { isUpdate: false })
+}
+
+/** 导出按钮操作 */
+async function handleExport() {
+  createConfirm({
+    title: t('common.exportTitle'),
+    iconType: 'warning',
+    content: t('common.exportMessage'),
+    async onOk() {
+      await exportUser(getForm().getFieldsValue() as UserExportReqVO)
+      createMessage.success(t('common.exportSuccessText'))
+    },
+  })
+}
 </script>
 
 <template>
@@ -51,6 +72,14 @@ function updateLevelFormRef(record: Recordable) {
     <DocAlert title="会员用户、标签、分组" url="https://doc.iocoder.cn/member/user/" />
 
     <BasicTable @register="registerTable">
+      <template #toolbar>
+        <a-button v-auth="['system:user:create']" type="primary" :pre-icon="IconEnum.ADD" @click="handleCreate">
+          {{ t('action.create') }}
+        </a-button>
+        <a-button v-auth="['system:user:export']" :pre-icon="IconEnum.EXPORT" @click="handleExport">
+          {{ t('action.export') }}
+        </a-button>
+      </template>
       <template #bodyCell="{ column, record }">
         <template v-if="column.key === 'action'">
           <TableAction
