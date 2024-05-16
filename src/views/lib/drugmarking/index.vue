@@ -1,154 +1,93 @@
+<script lang="ts" setup>
+import DrugMarkingModal from './DrugMarkingModal.vue'
+import { columns, searchFormSchema } from './drugMarking.data'
+import { useI18n } from '@/hooks/web/useI18n'
+import { useMessage } from '@/hooks/web/useMessage'
+import { useModal } from '@/components/Modal'
+import { useTable } from '@/components/Table'
+import { deleteDrugMarking, exportDrugMarking, getDrugMarkingPage } from '@/api/lib/drugmarking'
+import { IconEnum } from '@/enums/appEnum'
+
+defineOptions({ name: 'DrugMarking' })
+
+const { t } = useI18n()
+const { createConfirm, createMessage } = useMessage()
+const [registerModal, { openModal }] = useModal()
+
+const [registerTable, { getForm, reload }] = useTable({
+  title: '药房药物对标列表',
+  api: getDrugMarkingPage,
+  columns,
+  formConfig: { labelWidth: 120, schemas: searchFormSchema },
+  useSearchForm: true,
+  showTableSetting: true,
+  actionColumn: {
+    width: 140,
+    title: t('common.action'),
+    dataIndex: 'action',
+    fixed: 'right',
+  },
+})
+
+function handleCreate() {
+  openModal(true, { isUpdate: false })
+}
+
+function handleEdit(record: Recordable) {
+  openModal(true, { record, isUpdate: true })
+}
+
+async function handleExport() {
+  createConfirm({
+    title: t('common.exportTitle'),
+    iconType: 'warning',
+    content: t('common.exportMessage'),
+    async onOk() {
+      await exportDrugMarking(getForm().getFieldsValue())
+      createMessage.success(t('common.exportSuccessText'))
+    },
+  })
+}
+
+async function handleDelete(record: Recordable) {
+  await deleteDrugMarking(record.id)
+  createMessage.success(t('common.delSuccessText'))
+  reload()
+}
+</script>
+
 <template>
-  <div class="app-container">
-    <!-- 搜索工作栏 -->
-    <el-form :model="queryParams" ref="queryForm" size="small" :inline="true" v-show="showSearch" label-width="68px">
-      <el-form-item label="数据id" prop="dataId">
-        <el-input v-model="queryParams.dataId" placeholder="请输入数据id" clearable @keyup.enter.native="handleQuery"/>
-      </el-form-item>
-      <el-form-item label="用户id" prop="userId">
-        <el-input v-model="queryParams.userId" placeholder="请输入用户id" clearable @keyup.enter.native="handleQuery"/>
-      </el-form-item>
-      <el-form-item label="药房药物ID" prop="drugId">
-        <el-input v-model="queryParams.drugId" placeholder="请输入药房药物ID" clearable @keyup.enter.native="handleQuery"/>
-      </el-form-item>
-      <el-form-item label="创建时间" prop="createTime">
-        <el-date-picker v-model="queryParams.createTime" style="width: 240px" value-format="yyyy-MM-dd HH:mm:ss" type="daterange"
-                        range-separator="-" start-placeholder="开始日期" end-placeholder="结束日期" :default-time="['00:00:00', '23:59:59']" />
-      </el-form-item>
-      <el-form-item>
-        <el-button type="primary" icon="el-icon-search" @click="handleQuery">搜索</el-button>
-        <el-button icon="el-icon-refresh" @click="resetQuery">重置</el-button>
-      </el-form-item>
-    </el-form>
-
-    <!-- 操作工具栏 -->
-    <el-row :gutter="10" class="mb8">
-      <el-col :span="1.5">
-        <el-button type="primary" plain icon="el-icon-plus" size="mini" @click="openForm(undefined)"
-                   v-hasPermi="['lib:drug-marking:create']">新增</el-button>
-      </el-col>
-      <el-col :span="1.5">
-        <el-button type="warning" plain icon="el-icon-download" size="mini" @click="handleExport" :loading="exportLoading"
-                   v-hasPermi="['lib:drug-marking:export']">导出</el-button>
-      </el-col>
-              <right-toolbar :showSearch.sync="showSearch" @queryTable="getList"></right-toolbar>
-    </el-row>
-
-            <el-table v-loading="loading" :data="list" :stripe="true" :show-overflow-tooltip="true">
-            <el-table-column label="id" align="center" prop="id" />
-      <el-table-column label="数据id" align="center" prop="dataId" />
-      <el-table-column label="用户id" align="center" prop="userId" />
-      <el-table-column label="药房药物ID" align="center" prop="drugId" />
-      <el-table-column label="创建时间" align="center" prop="createTime" width="180">
-        <template v-slot="scope">
-          <span>{{ parseTime(scope.row.createTime) }}</span>
+  <div>
+    <BasicTable @register="registerTable">
+      <template #toolbar>
+        <a-button v-auth="['lib:drug-marking:create']" type="primary" :pre-icon="IconEnum.ADD" @click="handleCreate">
+          {{ t('action.create') }}
+        </a-button>
+        <a-button v-auth="['lib:drug-marking:export']" :pre-icon="IconEnum.EXPORT" @click="handleExport">
+          {{ t('action.export') }}
+        </a-button>
+      </template>
+      <template #bodyCell="{ column, record }">
+        <template v-if="column.key === 'action'">
+          <TableAction
+            :actions="[
+              { icon: IconEnum.EDIT, label: t('action.edit'), auth: 'lib:drug-marking:update', onClick: handleEdit.bind(null, record) },
+              {
+                icon: IconEnum.DELETE,
+                danger: true,
+                label: t('action.delete'),
+                auth: 'lib:drug-marking:delete',
+                popConfirm: {
+                  title: t('common.delMessage'),
+                  placement: 'left',
+                  confirm: handleDelete.bind(null, record),
+                },
+              },
+            ]"
+          />
         </template>
-      </el-table-column>
-      <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
-        <template v-slot="scope">
-          <el-button size="mini" type="text" icon="el-icon-edit" @click="openForm(scope.row.id)"
-                     v-hasPermi="['lib:drug-marking:update']">修改</el-button>
-          <el-button size="mini" type="text" icon="el-icon-delete" @click="handleDelete(scope.row)"
-                     v-hasPermi="['lib:drug-marking:delete']">删除</el-button>
-        </template>
-      </el-table-column>
-    </el-table>
-    <!-- 分页组件 -->
-    <pagination v-show="total > 0" :total="total" :page.sync="queryParams.pageNo" :limit.sync="queryParams.pageSize"
-                @pagination="getList"/>
-    <!-- 对话框(添加 / 修改) -->
-    <DrugMarkingForm ref="formRef" @success="getList" />
-    </div>
+      </template>
+    </BasicTable>
+    <DrugMarkingModal @register="registerModal" @success="reload()" />
+  </div>
 </template>
-
-<script>
-import * as DrugMarkingApi from '@/api/lib/drugmarking';
-import DrugMarkingForm from './DrugMarkingForm.vue';
-export default {
-  name: "DrugMarking",
-  components: {
-          DrugMarkingForm,
-  },
-  data() {
-    return {
-      // 遮罩层
-      loading: true,
-      // 导出遮罩层
-      exportLoading: false,
-      // 显示搜索条件
-      showSearch: true,
-              // 总条数
-        total: 0,
-      // 药房药物对标列表
-      list: [],
-      // 是否展开，默认全部展开
-      isExpandAll: true,
-      // 重新渲染表格状态
-      refreshTable: true,
-      // 选中行
-      currentRow: {},
-      // 查询参数
-      queryParams: {
-                    pageNo: 1,
-            pageSize: 10,
-        dataId: null,
-        userId: null,
-        drugId: null,
-        createTime: [],
-      },
-            };
-  },
-  created() {
-    this.getList();
-  },
-  methods: {
-    /** 查询列表 */
-    async getList() {
-      try {
-      this.loading = true;
-              const res = await DrugMarkingApi.getDrugMarkingPage(this.queryParams);
-        this.list = res.data.list;
-        this.total = res.data.total;
-      } finally {
-        this.loading = false;
-      }
-    },
-    /** 搜索按钮操作 */
-    handleQuery() {
-      this.queryParams.pageNo = 1;
-      this.getList();
-    },
-    /** 重置按钮操作 */
-    resetQuery() {
-      this.resetForm("queryForm");
-      this.handleQuery();
-    },
-    /** 添加/修改操作 */
-    openForm(id) {
-      this.$refs["formRef"].open(id);
-    },
-    /** 删除按钮操作 */
-    async handleDelete(row) {
-      const id = row.id;
-      await this.$modal.confirm('是否确认删除药房药物对标编号为"' + id + '"的数据项?')
-      try {
-       await DrugMarkingApi.deleteDrugMarking(id);
-       await this.getList();
-       this.$modal.msgSuccess("删除成功");
-      } catch {}
-    },
-    /** 导出按钮操作 */
-    async handleExport() {
-      await this.$modal.confirm('是否确认导出所有药房药物对标数据项?');
-      try {
-        this.exportLoading = true;
-        const res = await DrugMarkingApi.exportDrugMarkingExcel(this.queryParams);
-        this.$download.excel(res, '药房药物对标.xls');
-      } catch {
-      } finally {
-        this.exportLoading = false;
-      }
-    },
-              }
-};
-</script>

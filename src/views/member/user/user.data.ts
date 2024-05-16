@@ -159,8 +159,8 @@ export const formSchema: FormSchema[] = [
     field: 'levelId',
     component: 'ApiSelect',
     required: true,
+    ifShow: ({ values }) => !values.id,
     componentProps: {
-      disabled: ({ values }) => !values.id,
       placeholder: '请选择会员等级',
       api: () => getSimpleLevelList(),
       labelField: 'name',
@@ -172,12 +172,12 @@ export const formSchema: FormSchema[] = [
     field: 'expireTime',
     component: 'DatePicker',
     required: true,
+    ifShow: ({ values }) => !values.id,
     rules: [{
       required: true,
       message: '请选择会员到期时间',
     }],
     componentProps: {
-      disabled: ({ values }) => !values.id,
       placeholder: '请选择会员到期时间',
       class: 'w-full',
       disabledDate: (current: Dayjs) => {
