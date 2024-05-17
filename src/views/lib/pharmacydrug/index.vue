@@ -58,7 +58,7 @@ async function handleDelete(record: Recordable) {
 }
 
 function handleImport() {
-  openImportModal(true)
+  openImportModal(true, { reset: true })
 }
 </script>
 

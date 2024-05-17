@@ -1,5 +1,6 @@
 import type { BasicColumn, FormSchema } from '@/components/Table'
 import { useRender } from '@/components/Table'
+import { DICT_TYPE } from '@/utils/dict'
 
 export const columns: BasicColumn[] = [
   {
@@ -46,6 +47,9 @@ export const columns: BasicColumn[] = [
     title: '是否关注',
     dataIndex: 'watch',
     width: 160,
+    customRender: ({ text }) => {
+      return useRender.renderDict(text, DICT_TYPE.INFRA_INTEGER_STRING)
+    },
   },
   {
     title: '状态',
@@ -131,7 +135,7 @@ export const createFormSchema: FormSchema[] = [
     required: true,
     component: 'Input',
     componentProps: {
-      placeholder: '请输入通用名称',
+      placeholder: '请输入规格',
     },
   },
   {
@@ -140,7 +144,7 @@ export const createFormSchema: FormSchema[] = [
     required: true,
     component: 'Input',
     componentProps: {
-      placeholder: '请输入通用名称',
+      placeholder: '请输入生产厂家',
     },
   },
   {
@@ -148,25 +152,25 @@ export const createFormSchema: FormSchema[] = [
     field: 'dosageForm',
     component: 'Input',
     componentProps: {
-      placeholder: '请输入通用名称',
+      placeholder: '请输入剂型',
     },
   },
   {
     label: '进价',
     field: 'purchasePrice',
     required: true,
-    component: 'Input',
+    component: 'InputNumber',
     componentProps: {
-      placeholder: '请输入通用名称',
+      placeholder: '请输入进价',
     },
   },
   {
     label: '零售价',
     field: 'retailPrice',
     required: true,
-    component: 'Input',
+    component: 'InputNumber',
     componentProps: {
-      placeholder: '请输入通用名称',
+      placeholder: '请输入零售价',
     },
   },
 ]
