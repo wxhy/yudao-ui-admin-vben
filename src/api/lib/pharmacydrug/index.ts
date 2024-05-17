@@ -10,6 +10,11 @@ export function getPharmacyDrug(id: number) {
   return defHttp.get({ url: `/lib/pharmacy-drug/get?id=${id}` })
 }
 
+// 关注/取消关注药房药品
+export function watchPharmacyDrug(id: number) {
+  return defHttp.get({ url: `/lib/pharmacy-drug/watch?id=${id}` })
+}
+
 // 新增药房药品
 export function createPharmacyDrug(data) {
   return defHttp.post({ url: '/lib/pharmacy-drug/create', data })

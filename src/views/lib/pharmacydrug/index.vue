@@ -6,7 +6,12 @@ import { useI18n } from '@/hooks/web/useI18n'
 import { useMessage } from '@/hooks/web/useMessage'
 import { useModal } from '@/components/Modal'
 import { BasicTable, TableAction, useTable } from '@/components/Table'
-import { deletePharmacyDrug, exportPharmacyDrug, getPharmacyDrugPage } from '@/api/lib/pharmacydrug'
+import {
+  deletePharmacyDrug,
+  exportPharmacyDrug,
+  getPharmacyDrugPage,
+  watchPharmacyDrug,
+} from '@/api/lib/pharmacydrug'
 import { IconEnum } from '@/enums/appEnum'
 
 defineOptions({ name: 'PharmacyDrug' })
@@ -60,6 +65,15 @@ async function handleDelete(record: Recordable) {
 function handleImport() {
   openImportModal(true, { reset: true })
 }
+
+async function handleWatch(record: Recordable) {
+  await watchPharmacyDrug(record.id)
+  if (record.wathc === 0)
+    createMessage.success(t('common.watchSuccessText'))
+  else
+    createMessage.success(t('common.cancelWatchSuccessText'))
+  reload()
+}
 </script>
 
 <template>
@@ -80,8 +94,12 @@ function handleImport() {
         <template v-if="column.key === 'action'">
           <TableAction
             :actions="[
+              { icon: IconEnum.TEST, label: record.watch === 0 ? '关注' : '取消关注', auth: 'lib:pharmacy-drug:update', onClick: handleWatch.bind(null, record) },
+            ]"
+            :drop-down-actions="[
               { icon: IconEnum.EDIT, label: t('action.edit'), auth: 'lib:pharmacy-drug:update', onClick: handleEdit.bind(null, record) },
               {
+
                 icon: IconEnum.DELETE,
                 danger: true,
                 label: t('action.delete'),

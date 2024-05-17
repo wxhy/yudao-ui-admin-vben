@@ -24,5 +24,7 @@
   "saveSuccessText": "保存成功",
   "saveText": "保存",
   "searchText": "搜索",
-  "successText": "成功"
+  "successText": "成功",
+  "watchSuccessText": "关注成功",
+  "cancelWatchSuccessText": "取消关注成功"
 }

@@ -24,5 +24,7 @@
   "saveSuccessText": "Save success",
   "saveText": "Save",
   "searchText": "Search",
-  "successText": "Success"
+  "successText": "Success",
+  "watchSuccessText": "Focus on success",
+  "cancelWatchSuccessText": "Cancel the attention successfully"
 }
