@@ -3,7 +3,6 @@ import { reactive } from 'vue'
 import UserModal from './UserModal.vue'
 import UserRoleModal from './UserRoleModal.vue'
 import ResetPwdModal from './ResetPwdModal.vue'
-import DeptTree from './DeptTree.vue'
 import { columns, searchFormSchema } from './user.data'
 import { useI18n } from '@/hooks/web/useI18n'
 import { useMessage } from '@/hooks/web/useMessage'
@@ -82,17 +81,17 @@ async function handleDelete(record: Recordable) {
   reload()
 }
 /** 点击部门操作 */
-function handleSelect(deptId = '') {
-  searchInfo.deptId = deptId
-  reload()
-}
+// function handleSelect(deptId = '') {
+//   searchInfo.deptId = deptId
+//   reload()
+// }
 </script>
 
 <template>
   <div>
     <div class="flex">
-      <DeptTree class="w-1/4 xl:w-1/5" @select="handleSelect" />
-      <BasicTable class="w-3/4 xl:w-4/5" :search-info="searchInfo" @register="registerTable">
+      <!--      <DeptTree class="w-1/4 xl:w-1/5" @select="handleSelect" /> -->
+      <BasicTable class="w-4/4" :search-info="searchInfo" @register="registerTable">
         <template #toolbar>
           <a-button v-auth="['system:user:create']" type="primary" :pre-icon="IconEnum.ADD" @click="handleCreate">
             {{ t('action.create') }}

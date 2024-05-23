@@ -15,20 +15,25 @@ const { createMessage } = useMessage()
 const isUpdate = ref(true)
 
 const [registerForm, { setFieldsValue, resetFields, validate }] = useForm({
-  labelWidth: 120,
-  baseColProps: { span: 24 },
+  labelWidth: 100,
+  baseColProps: { span: 12 },
   schemas: formSchema,
   showActionButtonGroup: false,
-  actionColOptions: { span: 23 },
+  actionColOptions: { span: 24 },
 })
 
 const [registerModal, { setModalProps, closeModal }] = useModalInner(async (data) => {
   resetFields()
-  setModalProps({ confirmLoading: false })
+  setModalProps({ loading: true })
   isUpdate.value = !!data?.isUpdate
-  if (unref(isUpdate)) {
-    const res = await getUser(data.record.id)
-    setFieldsValue({ ...res })
+  try {
+    if (unref(isUpdate)) {
+      const res = await getUser(data.record.id)
+      setFieldsValue({ ...res })
+    }
+  }
+  finally {
+    setModalProps({ loading: false })
   }
 })
 

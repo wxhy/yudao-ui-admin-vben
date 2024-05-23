@@ -1,22 +1,22 @@
 <script lang="ts" setup>
-import DrugMarkingModal from './DrugMarkingModal.vue'
-import { columns, searchFormSchema } from './drugMarking.data'
+import LevelModal from './LevelModal.vue'
+import { columns, searchFormSchema } from './level.data'
 import { useI18n } from '@/hooks/web/useI18n'
 import { useMessage } from '@/hooks/web/useMessage'
 import { useModal } from '@/components/Modal'
-import { useTable } from '@/components/Table'
-import { deleteDrugMarking, exportDrugMarking, getDrugMarkingPage } from '@/api/lib/drugmarking'
+import { BasicTable, TableAction, useTable } from '@/components/Table'
+import { deleteLevel, getLevelPage } from '@/api/system/level'
 import { IconEnum } from '@/enums/appEnum'
 
-defineOptions({ name: 'DrugMarking' })
+defineOptions({ name: 'Level' })
 
 const { t } = useI18n()
-const { createConfirm, createMessage } = useMessage()
+const { createMessage } = useMessage()
 const [registerModal, { openModal }] = useModal()
 
-const [registerTable, { getForm, reload }] = useTable({
-  title: '药房药物对标列表',
-  api: getDrugMarkingPage,
+const [registerTable, { reload }] = useTable({
+  title: '用户等级列表',
+  api: getLevelPage,
   columns,
   formConfig: { labelWidth: 120, schemas: searchFormSchema },
   useSearchForm: true,
@@ -37,20 +37,8 @@ function handleEdit(record: Recordable) {
   openModal(true, { record, isUpdate: true })
 }
 
-async function handleExport() {
-  createConfirm({
-    title: t('common.exportTitle'),
-    iconType: 'warning',
-    content: t('common.exportMessage'),
-    async onOk() {
-      await exportDrugMarking(getForm().getFieldsValue())
-      createMessage.success(t('common.exportSuccessText'))
-    },
-  })
-}
-
 async function handleDelete(record: Recordable) {
-  await deleteDrugMarking(record.id)
+  await deleteLevel(record.id)
   createMessage.success(t('common.delSuccessText'))
   reload()
 }
@@ -60,23 +48,20 @@ async function handleDelete(record: Recordable) {
   <div>
     <BasicTable @register="registerTable">
       <template #toolbar>
-        <a-button v-auth="['lib:drug-marking:create']" type="primary" :pre-icon="IconEnum.ADD" @click="handleCreate">
+        <a-button v-auth="['system:level:create']" type="primary" :pre-icon="IconEnum.ADD" @click="handleCreate">
           {{ t('action.create') }}
-        </a-button>
-        <a-button v-auth="['lib:drug-marking:export']" :pre-icon="IconEnum.EXPORT" @click="handleExport">
-          {{ t('action.export') }}
         </a-button>
       </template>
       <template #bodyCell="{ column, record }">
         <template v-if="column.key === 'action'">
           <TableAction
             :actions="[
-              { icon: IconEnum.EDIT, label: t('action.edit'), auth: 'lib:drug-marking:update', onClick: handleEdit.bind(null, record) },
+              { icon: IconEnum.EDIT, label: t('action.edit'), auth: 'system:level:update', onClick: handleEdit.bind(null, record) },
               {
                 icon: IconEnum.DELETE,
                 danger: true,
                 label: t('action.delete'),
-                auth: 'lib:drug-marking:delete',
+                auth: 'system:level:delete',
                 popConfirm: {
                   title: t('common.delMessage'),
                   placement: 'left',
@@ -88,6 +73,6 @@ async function handleDelete(record: Recordable) {
         </template>
       </template>
     </BasicTable>
-    <DrugMarkingModal @register="registerModal" @success="reload()" />
+    <LevelModal @register="registerModal" @success="reload()" />
   </div>
 </template>

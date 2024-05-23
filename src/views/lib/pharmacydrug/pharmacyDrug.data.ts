@@ -1,13 +1,8 @@
 import type { BasicColumn, FormSchema } from '@/components/Table'
 import { useRender } from '@/components/Table'
-import { DICT_TYPE } from '@/utils/dict'
+import { DICT_TYPE, getDictOptions } from '@/utils/dict'
 
 export const columns: BasicColumn[] = [
-  {
-    title: '药物id',
-    dataIndex: 'id',
-    width: 160,
-  },
   {
     title: '批准号',
     dataIndex: 'approvalNumber',
@@ -77,30 +72,46 @@ export const searchFormSchema: FormSchema[] = [
     field: 'approvalNumber',
     component: 'Input',
     colProps: { span: 8 },
+    componentProps: {
+      placeholder: '请输入批准文号',
+    },
   },
   {
     label: '通用名称',
     field: 'commonName',
     component: 'Input',
     colProps: { span: 8 },
+    componentProps: {
+      placeholder: '请输入通用名称',
+    },
   },
   {
     label: '生产厂家',
     field: 'manufacturer',
     component: 'Input',
     colProps: { span: 8 },
+    componentProps: {
+      placeholder: '请输入生产厂家',
+    },
   },
   {
     label: '产品批次',
     field: 'productBatch',
     component: 'Input',
     colProps: { span: 8 },
+    componentProps: {
+      placeholder: '请输入产品批次',
+    },
   },
   {
     label: '是否关注',
     field: 'watch',
-    component: 'Input',
+    component: 'Select',
     colProps: { span: 8 },
+    componentProps: {
+      options: getDictOptions(DICT_TYPE.INFRA_INTEGER_STRING),
+      placeholder: '请选择是否关注',
+    },
   },
   {
     label: '创建时间',
@@ -215,12 +226,12 @@ export const updateFormSchema: FormSchema[] = [
     label: '进价',
     field: 'purchasePrice',
     required: true,
-    component: 'Input',
+    component: 'InputNumber',
   },
   {
     label: '零售价',
     field: 'retailPrice',
     required: true,
-    component: 'Input',
+    component: 'InputNumber',
   },
 ]

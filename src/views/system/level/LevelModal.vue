@@ -1,23 +1,24 @@
 <script lang="ts" setup>
 import { ref, unref } from 'vue'
-import { formSchema } from './level.data'
+import { createFormSchema, updateFormSchema } from './level.data'
 import { useI18n } from '@/hooks/web/useI18n'
 import { useMessage } from '@/hooks/web/useMessage'
 import { BasicForm, useForm } from '@/components/Form'
 import { BasicModal, useModalInner } from '@/components/Modal'
-import { createLevel, getLevel, updateLevel } from '@/api/member/level'
+import { createLevel, getLevel, updateLevel } from '@/api/system/level'
 
-defineOptions({ name: 'MemberLevelModal' })
+defineOptions({ name: 'LevelModal' })
 
 const emit = defineEmits(['success', 'register'])
+
 const { t } = useI18n()
 const { createMessage } = useMessage()
 const isUpdate = ref(true)
 
-const [registerForm, { setFieldsValue, resetFields, validate }] = useForm({
+const [registerForm, { setFieldsValue, resetFields, resetSchema, validate }] = useForm({
   labelWidth: 120,
   baseColProps: { span: 24 },
-  schemas: formSchema,
+  schemas: createFormSchema,
   showActionButtonGroup: false,
   actionColOptions: { span: 23 },
 })
@@ -27,6 +28,7 @@ const [registerModal, { setModalProps, closeModal }] = useModalInner(async (data
   setModalProps({ confirmLoading: false })
   isUpdate.value = !!data?.isUpdate
   if (unref(isUpdate)) {
+    resetSchema(updateFormSchema)
     const res = await getLevel(data.record.id)
     setFieldsValue({ ...res })
   }
@@ -52,10 +54,7 @@ async function handleSubmit() {
 </script>
 
 <template>
-  <BasicModal
-    v-bind="$attrs" :title="isUpdate ? t('action.edit') : t('action.create')" @register="registerModal"
-    @ok="handleSubmit"
-  >
+  <BasicModal v-bind="$attrs" :title="isUpdate ? t('action.edit') : t('action.create')" @register="registerModal" @ok="handleSubmit">
     <BasicForm @register="registerForm" />
   </BasicModal>
 </template>
