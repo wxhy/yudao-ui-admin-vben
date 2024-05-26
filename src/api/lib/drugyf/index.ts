@@ -4,7 +4,9 @@ import { defHttp } from '@/utils/http/axios'
 export function getDrugYfPage(params) {
   return defHttp.get({ url: '/lib/drug-yf/page', params })
 }
-
+export function getMarkingDrugYfPage(params) {
+  return defHttp.get({ url: '/lib/drug-yf/marking', params })
+}
 // 查询药房药品详情
 export function getDrugYf(id: number) {
   return defHttp.get({ url: `/lib/drug-yf/get?id=${id}` })

@@ -2,6 +2,7 @@
 import PharmacyDrugModal from './PharmacyDrugModal.vue'
 import DrugImportModal from './DrugImportModal.vue'
 import { columns, searchFormSchema } from './pharmacyDrug.data'
+import MarkingDrugModal from './MarkingDrugModal.vue'
 import { useI18n } from '@/hooks/web/useI18n'
 import { useMessage } from '@/hooks/web/useMessage'
 import { useModal } from '@/components/Modal'
@@ -20,6 +21,7 @@ const { t } = useI18n()
 const { createConfirm, createMessage } = useMessage()
 const [registerModal, { openModal }] = useModal()
 const [registerImportModal, { openModal: openImportModal }] = useModal()
+const [registerMarkingModal, { openModal: openMarkingModal }] = useModal()
 
 const [registerTable, { getForm, reload }] = useTable({
   title: '药房药品列表',
@@ -29,7 +31,7 @@ const [registerTable, { getForm, reload }] = useTable({
   useSearchForm: true,
   showTableSetting: true,
   actionColumn: {
-    width: 140,
+    width: 200,
     title: t('common.action'),
     dataIndex: 'action',
     fixed: 'right',
@@ -74,6 +76,10 @@ async function handleWatch(record: Recordable) {
     createMessage.success(t('common.cancelWatchSuccessText'))
   reload()
 }
+
+function handleMarking(record: Recordable) {
+  openMarkingModal(true, record)
+}
 </script>
 
 <template>
@@ -95,6 +101,7 @@ async function handleWatch(record: Recordable) {
           <TableAction
             :actions="[
               { icon: IconEnum.TEST, label: record.watch === 0 ? '关注' : '取消关注', auth: 'lib:pharmacy-drug:update', onClick: handleWatch.bind(null, record) },
+              { icon: IconEnum.TEST, label: '标准品', auth: 'lib:pharmacy-drug:update', onClick: handleMarking.bind(null, record) },
             ]"
             :drop-down-actions="[
               { icon: IconEnum.EDIT, label: t('action.edit'), auth: 'lib:pharmacy-drug:update', onClick: handleEdit.bind(null, record) },
@@ -117,5 +124,6 @@ async function handleWatch(record: Recordable) {
     </BasicTable>
     <PharmacyDrugModal @register="registerModal" @success="reload()" />
     <DrugImportModal @register="registerImportModal" @success="reload()" />
+    <MarkingDrugModal @register="registerMarkingModal" @success="reload()" />
   </div>
 </template>
