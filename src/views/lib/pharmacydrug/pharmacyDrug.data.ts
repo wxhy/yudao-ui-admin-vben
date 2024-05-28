@@ -39,6 +39,17 @@ export const columns: BasicColumn[] = [
     width: 160,
   },
   {
+    title: '最新价格',
+    dataIndex: 'otherPrice',
+    width: 160,
+    customRender: ({ record, text }) => {
+      console.log(record)
+      if (record.otherPrice < record.retailPrice)
+        return useRender.renderTag(text, '#d7003a')
+      return useRender.renderTag(text)
+    },
+  },
+  {
     title: '是否关注',
     dataIndex: 'watch',
     width: 160,
@@ -46,11 +57,11 @@ export const columns: BasicColumn[] = [
       return useRender.renderDict(text, DICT_TYPE.INFRA_INTEGER_STRING)
     },
   },
-  {
-    title: '状态',
-    dataIndex: 'status',
-    width: 160,
-  },
+  // {
+  //   title: '状态',
+  //   dataIndex: 'status',
+  //   width: 160,
+  // },
   {
     title: '备注',
     dataIndex: 'mark',
