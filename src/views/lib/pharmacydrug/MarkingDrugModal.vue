@@ -17,12 +17,12 @@ const [registerTable, { reload }] = useTable({
   // formConfig: { labelWidth: 120, schemas: searchFormSchema },
   // useSearchForm: true,
   showTableSetting: true,
-  actionColumn: {
-    width: 140,
-    title: t('common.action'),
-    dataIndex: 'action',
-    fixed: 'right',
-  },
+  // actionColumn: {
+  //   width: 140,
+  //   title: t('common.action'),
+  //   dataIndex: 'action',
+  //   fixed: 'right',
+  // },
 })
 
 const searchInfo = ref({
@@ -46,6 +46,6 @@ const [registerModal, { setModalProps }] = useModalInner(async (data) => {
     :show-ok-btn="false"
     :show-cancel-btn="false" :min-height="150" @register="registerModal"
   >
-    <BasicTable :search-info="searchInfo" @register="registerTable" />
+    <BasicTable :search-info="searchInfo" :max-height="400" @register="registerTable" />
   </BasicModal>
 </template>

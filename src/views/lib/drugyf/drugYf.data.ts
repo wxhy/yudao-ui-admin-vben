@@ -3,11 +3,6 @@ import { useRender } from '@/components/Table'
 
 export const columns: BasicColumn[] = [
   {
-    title: '药物id',
-    dataIndex: 'id',
-    width: 160,
-  },
-  {
     title: '名称',
     dataIndex: 'name',
     width: 160,
