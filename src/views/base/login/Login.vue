@@ -42,12 +42,6 @@ const title = computed(() => globSetting?.title ?? '')
           <AppLogo class="-enter-x" />
           <div class="my-auto">
             <img :alt="title" src="@/assets/svg/login-box-bg.svg" class="-enter-x w-1/2 -mt-16">
-            <div class="-enter-x mt-10 font-medium text-white">
-              <span class="mt-4 inline-block text-3xl"> {{ t('sys.login.signInTitle') }}</span>
-            </div>
-            <div class="-enter-x mt-5 font-normal text-white dark:text-gray-500">
-              {{ t('sys.login.signInDesc') }}
-            </div>
           </div>
         </div>
         <div class="h-full w-full flex py-5 xl:my-0 xl:h-auto xl:w-6/12 xl:py-0">
