@@ -1,18 +1,21 @@
 <script lang="ts" setup>
+import { computed } from 'vue'
 import PharmacyDrugModal from './PharmacyDrugModal.vue'
 import DrugImportModal from './DrugImportModal.vue'
-import { columns, searchFormSchema } from './pharmacyDrug.data'
+import { columns, markingDrugColumns, searchFormSchema } from './pharmacyDrug.data'
 import MarkingDrugModal from './MarkingDrugModal.vue'
 import { useI18n } from '@/hooks/web/useI18n'
 import { useMessage } from '@/hooks/web/useMessage'
 import { useModal } from '@/components/Modal'
 import { BasicTable, TableAction, useTable } from '@/components/Table'
 import {
+  deleteBatchPharmacyDrug,
   deletePharmacyDrug,
   exportPharmacyDrug,
   getPharmacyDrugPage,
   watchPharmacyDrug,
 } from '@/api/lib/pharmacydrug'
+import { deleteDrugMarking } from '@/api/lib/marking'
 import { IconEnum } from '@/enums/appEnum'
 
 defineOptions({ name: 'PharmacyDrug' })
@@ -23,13 +26,15 @@ const [registerModal, { openModal }] = useModal()
 const [registerImportModal, { openModal: openImportModal }] = useModal()
 const [registerMarkingModal, { openModal: openMarkingModal }] = useModal()
 
-const [registerTable, { getForm, reload }] = useTable({
+const [registerTable, { getForm, reload, getSelectRowKeys, clearSelectedRowKeys }] = useTable({
   title: '药房药品列表',
   api: getPharmacyDrugPage,
   columns,
   formConfig: { labelWidth: 120, schemas: searchFormSchema },
   useSearchForm: true,
   showTableSetting: true,
+  rowSelection: { type: 'checkbox' },
+  rowKey: 'id',
   actionColumn: {
     width: 200,
     title: t('common.action'),
@@ -80,6 +85,34 @@ async function handleWatch(record: Recordable) {
 function handleMarking(record: Recordable) {
   openMarkingModal(true, record)
 }
+
+async function handleRemoveMarking(record: Recordable) {
+  await deleteDrugMarking(record.id)
+  createMessage.success(t('common.removeSuccessText'))
+  reload()
+}
+
+// 选中数量
+const deleteDisabled = computed<boolean>(() => {
+  return getSelectRowKeys().length === 0
+})
+
+async function handleDeleteBatch() {
+  createConfirm({
+    title: t('common.delMessage'),
+    iconType: 'warning',
+    content: t('common.delMessage'),
+    async onOk() {
+      const ids = getSelectRowKeys()
+      await deleteBatchPharmacyDrug(ids)
+      // 重加载表格
+      reload()
+      // 清除选中的行
+      clearSelectedRowKeys()
+      createMessage.success(t('common.delSuccessText'))
+    },
+  })
+}
 </script>
 
 <template>
@@ -92,9 +125,37 @@ function handleMarking(record: Recordable) {
         <a-button v-auth="['lib:pharmacy-drug:create']" type="primary" :pre-icon="IconEnum.ADD" @click="handleCreate">
           {{ t('action.create') }}
         </a-button>
+        <a-button v-auth="['lib:pharmacy-drug:delete']" danger type="primary" :disabled="deleteDisabled" :pre-icon="IconEnum.DELETE" @click="handleDeleteBatch">
+          {{ t('action.delete') }}
+        </a-button>
         <a-button v-auth="['lib:pharmacy-drug:export']" :pre-icon="IconEnum.EXPORT" @click="handleExport">
           {{ t('action.export') }}
         </a-button>
+      </template>
+      <template #expandedRowRender="{ record }">
+        <BasicTable
+          :columns="markingDrugColumns" :data-source="record.drugInfos" :pagination="false" :max-height="50" :action-column="{
+            width: 200,
+            title: t('common.action'),
+            dataIndex: 'action' }"
+        >
+          <template #bodyCell="{ column, record }">
+            <template v-if="column.key === 'action'">
+              <TableAction
+                :actions="[
+                  { icon: IconEnum.DELETE,
+                    label: '移除',
+                    auth: 'lib:pharmacy-drug:update',
+                    popConfirm: {
+                      title: t('common.delMessage'),
+                      placement: 'left',
+                      confirm: handleRemoveMarking.bind(null, record),
+                    } },
+                ]"
+              />
+            </template>
+          </template>
+        </BasicTable>
       </template>
       <template #bodyCell="{ column, record }">
         <template v-if="column.key === 'action'">

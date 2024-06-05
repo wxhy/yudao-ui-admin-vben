@@ -246,3 +246,49 @@ export const updateFormSchema: FormSchema[] = [
     component: 'InputNumber',
   },
 ]
+export const markingDrugColumns: BasicColumn[] = [
+  {
+    title: '批准号',
+    dataIndex: 'approvalNumber',
+    width: 120,
+  },
+  {
+    title: '名称',
+    dataIndex: 'name',
+    width: 120,
+  },
+  {
+    title: '规格',
+    dataIndex: 'packing',
+    width: 80,
+  },
+  {
+    title: '剂型',
+    dataIndex: 'dosageForm',
+    defaultHidden: true,
+    width: 80,
+  },
+  {
+    title: '生产厂家',
+    dataIndex: 'productionEnterPrise',
+    width: 160,
+  },
+  {
+    title: '价格',
+    dataIndex: 'price',
+    width: 80,
+  },
+  {
+    title: '售卖店铺数量',
+    dataIndex: 'shopCount',
+    width: 80,
+  },
+  // {
+  //   title: '药品图片',
+  //   dataIndex: 'imgInfo',
+  //   width: 160,
+  //   customRender({ text }) {
+  //     return useRender.renderImg(text)
+  //   },
+  // },
+]

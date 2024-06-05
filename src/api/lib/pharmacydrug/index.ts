@@ -1,3 +1,4 @@
+import qs from 'qs'
 import { defHttp } from '@/utils/http/axios'
 
 // 查询药房药品列表
@@ -38,4 +39,8 @@ export function exportPharmacyDrug(params) {
 // 下载药物导入模板
 export function downloadTemplate() {
   return defHttp.download({ url: `/lib/pharmacy-drug/get-import-template` }, `药物导入模板.xlsx`)
+}
+// 批量删除
+export function deleteBatchPharmacyDrug(ids: number[]) {
+  return defHttp.delete({ url: `/lib/pharmacy-drug/deleteBatch?${qs.stringify({ ids }, { indices: false })}` })
 }

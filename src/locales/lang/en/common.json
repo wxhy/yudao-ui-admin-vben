@@ -26,5 +26,6 @@
   "searchText": "Search",
   "successText": "Success",
   "watchSuccessText": "Focus on success",
-  "cancelWatchSuccessText": "Cancel the attention successfully"
+  "cancelWatchSuccessText": "Cancel the attention successfully",
+  "removeSuccessText": "remove success"
 }

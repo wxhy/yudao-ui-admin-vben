@@ -26,5 +26,6 @@
   "searchText": "搜索",
   "successText": "成功",
   "watchSuccessText": "关注成功",
-  "cancelWatchSuccessText": "取消关注成功"
+  "cancelWatchSuccessText": "取消关注成功",
+  "removeSuccessText": "移除成功"
 }
