@@ -38,8 +38,8 @@ const verify = ref()
 const captchaType = ref('blockPuzzle') // blockPuzzle 滑块 clickWord 点击文字
 
 const formData = reactive({
-  username: 'admin',
-  password: 'admin123',
+  username: '',
+  password: '',
   captchaVerification: '',
 })
 
