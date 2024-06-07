@@ -1,26 +1,21 @@
 <script lang="ts" setup>
-import { ref } from 'vue'
-import GrowCard from './components/GrowCard.vue'
-import SiteAnalysis from './components/SiteAnalysis.vue'
-import VisitSource from './components/VisitSource.vue'
-import VisitRadar from './components/VisitRadar.vue'
-import SalesProductPie from './components/SalesProductPie.vue'
-
-const loading = ref(true)
-
-setTimeout(() => {
-  loading.value = false
-}, 500)
+import { Card } from 'ant-design-vue'
 </script>
 
 <template>
   <div class="p-4">
-    <GrowCard :loading="loading" class="enter-y" />
-    <SiteAnalysis class="enter-y !my-4" :loading="loading" />
-    <div class="enter-y md:flex">
-      <VisitRadar class="w-full md:w-1/3" :loading="loading" />
-      <VisitSource class="w-full !my-4 md:w-1/3 !md:mx-4 !md:my-0" :loading="loading" />
-      <SalesProductPie class="w-full md:w-1/3" :loading="loading" />
-    </div>
+    <Card class="enter-y w-1/3 !m-15px" :hoverable="true">
+      <template #cover>
+        <img
+          alt="example"
+          src="@/assets/images/yaofangwang.png"
+        />
+      </template>
+      <template #actions>
+        <div class="flex justify-end mr-20px">
+          <a-button :disabled="true">已开通</a-button>
+        </div>
+      </template>
+    </Card>
   </div>
 </template>

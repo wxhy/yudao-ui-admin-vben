@@ -8,13 +8,23 @@ const dashboard: AppRouteModule = {
   name: 'Dashboard',
   component: LAYOUT,
   parentId: 0,
-  redirect: '/dashboard/analysis',
+  redirect: '/dashboard/workbench',
   meta: {
     orderNo: 10,
     icon: 'ant-design:home-outlined',
     title: t('routes.dashboard.dashboard'),
   },
   children: [
+
+    {
+      path: 'workbench',
+      name: 'Workbench',
+      component: () => import('@/views/dashboard/workbench/index.vue'),
+      meta: {
+        title: t('routes.dashboard.workbench'),
+        icon: 'ant-design:appstore-outlined',
+      },
+    },
     {
       path: 'analysis',
       name: 'Analysis',
@@ -25,15 +35,7 @@ const dashboard: AppRouteModule = {
         icon: 'ant-design:bar-chart-outlined',
       },
     },
-    {
-      path: 'workbench',
-      name: 'Workbench',
-      component: () => import('@/views/dashboard/workbench/index.vue'),
-      meta: {
-        title: t('routes.dashboard.workbench'),
-        icon: 'ant-design:appstore-outlined',
-      },
-    },
+
   ],
 }
 
