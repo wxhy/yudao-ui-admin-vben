@@ -26,22 +26,22 @@ export const columns: BasicColumn[] = [
   {
     title: '剂型',
     dataIndex: 'dosageForm',
-    width: 160,
+    width: 80,
   },
   {
     title: '进价',
     dataIndex: 'purchasePrice',
-    width: 160,
+    width: 80,
   },
   {
     title: '零售价',
     dataIndex: 'retailPrice',
-    width: 160,
+    width: 80,
   },
   {
     title: '最新价格',
     dataIndex: 'otherPrice',
-    width: 160,
+    width: 80,
     customRender: ({ record, text }) => {
       console.log(record)
       if (record.otherPrice < record.retailPrice)

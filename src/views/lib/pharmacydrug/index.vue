@@ -162,7 +162,6 @@ async function handleDeleteBatch() {
           <TableAction
             :actions="[
               { icon: IconEnum.TEST, label: record.watch === 0 ? '关注' : '取消关注', auth: 'lib:pharmacy-drug:update', onClick: handleWatch.bind(null, record) },
-              { icon: IconEnum.TEST, label: '标准品', auth: 'lib:pharmacy-drug:update', onClick: handleMarking.bind(null, record) },
             ]"
             :drop-down-actions="[
               { icon: IconEnum.EDIT, label: t('action.edit'), auth: 'lib:pharmacy-drug:update', onClick: handleEdit.bind(null, record) },
