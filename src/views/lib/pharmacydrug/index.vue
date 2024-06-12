@@ -134,7 +134,7 @@ async function handleDeleteBatch() {
       </template>
       <template #expandedRowRender="{ record }">
         <BasicTable
-          :columns="markingDrugColumns" :data-source="record.drugInfos" :pagination="false" :max-height="50" :action-column="{
+          :columns="markingDrugColumns" :data-source="record.drugInfos" :pagination="false" :action-column="{
             width: 200,
             title: t('common.action'),
             dataIndex: 'action' }"
