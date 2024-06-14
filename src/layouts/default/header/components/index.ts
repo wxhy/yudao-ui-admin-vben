@@ -11,4 +11,5 @@ export const Notify = createAsyncComponent(() => import('./notify/index.vue'))
 
 export const ErrorAction = createAsyncComponent(() => import('./ErrorAction.vue'))
 
+export const Customer = createAsyncComponent(() => import('./customer/index.vue'))
 export { FullScreen }

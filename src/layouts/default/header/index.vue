@@ -4,10 +4,10 @@ import { computed, unref } from 'vue'
 import { Layout } from 'ant-design-vue'
 import LayoutMenu from '../menu/index.vue'
 import LayoutTrigger from '../trigger/index.vue'
-import { ErrorAction, FullScreen, LayoutBreadcrumb, Notify, UserDropDown } from './components'
+import { Customer, ErrorAction, FullScreen, LayoutBreadcrumb, Notify, UserDropDown } from './components'
 import { propTypes } from '@/utils/propTypes'
 
-import { AppLocalePicker, AppLogo, AppSearch, AppSizePicker } from '@/components/Application'
+import { AppLogo, AppSearch, AppSizePicker } from '@/components/Application'
 
 import { useHeaderSetting } from '@/hooks/setting/useHeaderSetting'
 import { useMenuSetting } from '@/hooks/setting/useMenuSetting'
@@ -111,16 +111,13 @@ const getMenuMode = computed(() => {
 
       <ErrorAction v-if="getUseErrorHandle" :class="`${prefixCls}-action__item error-action`" />
 
+      <Customer :class="`${prefixCls}-action__item notify-item`" />
+
       <Notify v-if="getShowNotice" :class="`${prefixCls}-action__item notify-item`" />
 
       <FullScreen v-if="getShowFullScreen" :class="`${prefixCls}-action__item fullscreen-item`" />
 
       <AppSizePicker :show-text="false" :class="`${prefixCls}-action__item size-item`" />
-
-      <AppLocalePicker
-        v-if="getShowLocalePicker" :reload="true" :show-text="false"
-        :class="`${prefixCls}-action__item locale-item`"
-      />
 
       <UserDropDown :theme="getHeaderTheme" />
 
