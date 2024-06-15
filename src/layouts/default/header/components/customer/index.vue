@@ -1,7 +1,7 @@
 <script lang="ts" setup>
 import { Tooltip } from 'ant-design-vue'
 import { WhatsAppOutlined } from '@ant-design/icons-vue'
-import CustomerModal from './CustomerModal.vue'
+import CustomerModal from '@/layouts/default/header/components/customer/CustomerModal.vue'
 import { useModal } from '@/components/Modal'
 
 defineOptions({ name: 'Customer' })

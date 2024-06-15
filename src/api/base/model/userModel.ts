@@ -36,10 +36,17 @@ export interface GetUserInfoModel {
   menus: RouteItem[]
   // 用户id
   user: userModel
+  levelInfo: levelModel
 }
 
 export interface userModel {
   id: string | number
   avatar: string
   nickname: string
+}
+
+export interface levelModel {
+  id: string | number
+  name: string
+  icon: string
 }

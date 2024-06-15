@@ -1,5 +1,7 @@
 <script lang="ts" setup>
 import { computed } from 'vue'
+import { QuestionCircleOutlined } from '@ant-design/icons-vue'
+import { FloatButton } from 'ant-design-vue'
 import LoginForm from './LoginForm.vue'
 import ForgetPasswordForm from './ForgetPasswordForm.vue'
 import RegisterForm from './RegisterForm.vue'
@@ -10,6 +12,8 @@ import { useGlobSetting } from '@/hooks/setting'
 import { useI18n } from '@/hooks/web/useI18n'
 import { useDesign } from '@/hooks/web/useDesign'
 import { useLocaleStore } from '@/store/modules/locale'
+import CustomerModal from '@/layouts/default/header/components/customer/CustomerModal.vue'
+import { useModal } from '@/components/Modal'
 
 defineProps({
   sessionTimeout: {
@@ -23,6 +27,7 @@ const { t } = useI18n()
 const localeStore = useLocaleStore()
 const showLocale = localeStore.getShowPicker
 const title = computed(() => globSetting?.title ?? '')
+const [register, { openModal }] = useModal()
 </script>
 
 <template>
@@ -60,6 +65,17 @@ const title = computed(() => globSetting?.title ?? '')
       </div>
     </div>
   </div>
+  <FloatButton
+    shape="circle"
+    type="primary"
+    class="mb-50px"
+    @click="openModal()"
+  >
+    <template #icon>
+      <QuestionCircleOutlined />
+    </template>
+  </FloatButton>
+  <CustomerModal @register="register" />
 </template>
 
 <style lang="less">

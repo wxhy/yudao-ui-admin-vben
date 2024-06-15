@@ -4,7 +4,7 @@ import { computed, unref } from 'vue'
 import { Layout } from 'ant-design-vue'
 import LayoutMenu from '../menu/index.vue'
 import LayoutTrigger from '../trigger/index.vue'
-import { Customer, ErrorAction, FullScreen, LayoutBreadcrumb, Notify, UserDropDown } from './components'
+import { ErrorAction, FullScreen, LayoutBreadcrumb, Notify, UserDropDown } from './components'
 import { propTypes } from '@/utils/propTypes'
 
 import { AppLogo, AppSearch, AppSizePicker } from '@/components/Application'
@@ -15,17 +15,20 @@ import { useRootSetting } from '@/hooks/setting/useRootSetting'
 
 import { MenuModeEnum, MenuSplitTyeEnum } from '@/enums/menuEnum'
 import { SettingButtonPositionEnum } from '@/enums/appEnum'
-
+import { formatToDate } from '@/utils/dateUtil'
 import { useAppInject } from '@/hooks/web/useAppInject'
 import { useDesign } from '@/hooks/web/useDesign'
 
 import { createAsyncComponent } from '@/utils/factory/createAsyncComponent'
-import { useLocale } from '@/locales/useLocale'
+
+// import { useLocale } from '@/locales/useLocale'
+import { useUserStore } from '@/store/modules/user'
 
 defineOptions({ name: 'LayoutHeader' })
 const props = defineProps({
   fixed: propTypes.bool,
 })
+const userInfo = useUserStore().getUserInfo
 const Header = Layout.Header
 const SettingDrawer = createAsyncComponent(() => import('@/layouts/default/setting/index.vue'), {
   loading: true,
@@ -37,7 +40,7 @@ const { getUseErrorHandle, getShowSettingButton, getSettingButtonPosition } = us
 const { getHeaderTheme, getShowFullScreen, getShowNotice, getShowContent, getShowBread, getShowHeaderLogo, getShowHeader, getShowSearch }
   = useHeaderSetting()
 
-const { getShowLocalePicker } = useLocale()
+// const { getShowLocalePicker } = useLocale()
 
 const { getIsMobile } = useAppInject()
 
@@ -107,11 +110,14 @@ const getMenuMode = computed(() => {
 
     <!-- action  -->
     <div :class="`${prefixCls}-action`">
+      <div v-if="userInfo.user && userInfo.user.userType === 1" class="flex justify-between">
+        <img :src="userInfo.levelInfo.icon" class="w-20px h-20px mt-15px mr-5px"/>
+        <div> 到期时间： <span style="color:red">{{ formatToDate(userInfo.user.expireTime) }}</span></div>
+      </div>
+
       <AppSearch v-if="getShowSearch" :class="`${prefixCls}-action__item search-item`" />
 
       <ErrorAction v-if="getUseErrorHandle" :class="`${prefixCls}-action__item error-action`" />
-
-      <Customer :class="`${prefixCls}-action__item notify-item`" />
 
       <Notify v-if="getShowNotice" :class="`${prefixCls}-action__item notify-item`" />
 

@@ -1,15 +1,17 @@
 <script lang="ts" setup>
 import { FloatButton } from 'ant-design-vue'
 
-// import { QuestionCircleOutlined } from '@ant-design/icons-vue'
 import { computed, unref } from 'vue'
 
+import { QuestionCircleOutlined } from '@ant-design/icons-vue'
 import { SettingButtonPositionEnum } from '@/enums/appEnum'
 import { useHeaderSetting } from '@/hooks/setting/useHeaderSetting'
 import { useRootSetting } from '@/hooks/setting/useRootSetting'
 import { useUserStoreWithOut } from '@/store/modules/user'
 import { createAsyncComponent } from '@/utils/factory/createAsyncComponent'
 import SessionTimeoutLogin from '@/views/base/login/SessionTimeoutLogin.vue'
+import CustomerModal from '@/layouts/default/header/components/customer/CustomerModal.vue'
+import { useModal } from '@/components/Modal'
 
 // import { SITE_URL } from '@/settings/siteSetting'
 
@@ -37,11 +39,23 @@ const getIsFixedSettingDrawer = computed(() => {
 
   return settingButtonPosition === SettingButtonPositionEnum.FIXED
 })
+const [register, { openModal }] = useModal()
 </script>
 
 <template>
   <LayoutLockPage />
   <FloatButton.BackTop v-if="getUseOpenBackTop" :target="getTarget" />
+
+  <FloatButton
+    shape="circle"
+    type="primary"
+    class="mb-50px"
+    @click="openModal()"
+  >
+    <template #icon>
+      <QuestionCircleOutlined />
+    </template>
+  </FloatButton>
   <!-- <FloatButton
     shape="circle"
     type="primary"
@@ -58,4 +72,6 @@ const getIsFixedSettingDrawer = computed(() => {
     class="absolute top-[45%] z-10 flex cursor-pointer items-center justify-items-center rounded-l-md rounded-r-none p-2.5"
   />
   <SessionTimeoutLogin v-if="getIsSessionTimeout" />
+
+  <CustomerModal @register="register" />
 </template>
