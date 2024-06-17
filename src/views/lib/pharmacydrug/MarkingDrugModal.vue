@@ -71,6 +71,7 @@ async function handleResetMarking() {
   await markingDrug(searchInfo.value.drugId)
   loading.value = false
   createMessage.success('重新对标成功')
+  reload()
 }
 </script>
 
