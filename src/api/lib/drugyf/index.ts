@@ -5,7 +5,7 @@ export function getDrugYfPage(params) {
   return defHttp.get({ url: '/lib/drug-yf/page', params })
 }
 export function getMarkingDrugYfPage(params) {
-  return defHttp.get({ url: '/lib/drug-yf/marking', params })
+  return defHttp.get({ url: '/lib/drug-marking/page', params })
 }
 // 查询药房药品详情
 export function getDrugYf(id: number) {
@@ -30,4 +30,12 @@ export function deleteDrugYf(id: number) {
 // 导出药房药品 Excel
 export function exportDrugYf(params) {
   return defHttp.download({ url: '/lib/drug-yf/export-excel', params }, '药房药品.xls')
+}
+
+export function deleteDrugMarking(id: number) {
+  return defHttp.delete({ url: `/lib/drug-marking/delete?id=${id}` })
+}
+
+export function markingDrug(id: number) {
+  return defHttp.get({ url: `/lib/drug-marking/drug?drugId=${id}` })
 }

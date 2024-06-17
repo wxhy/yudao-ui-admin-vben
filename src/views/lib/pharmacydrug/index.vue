@@ -2,7 +2,7 @@
 import { computed } from 'vue'
 import PharmacyDrugModal from './PharmacyDrugModal.vue'
 import DrugImportModal from './DrugImportModal.vue'
-import { columns, markingDrugColumns, searchFormSchema } from './pharmacyDrug.data'
+import { columns, searchFormSchema } from './pharmacyDrug.data'
 import MarkingDrugModal from './MarkingDrugModal.vue'
 import { useI18n } from '@/hooks/web/useI18n'
 import { useMessage } from '@/hooks/web/useMessage'
@@ -15,7 +15,6 @@ import {
   getPharmacyDrugPage,
   watchPharmacyDrug,
 } from '@/api/lib/pharmacydrug'
-import { deleteDrugMarking } from '@/api/lib/marking'
 import { IconEnum } from '@/enums/appEnum'
 
 defineOptions({ name: 'PharmacyDrug' })
@@ -75,7 +74,7 @@ function handleImport() {
 
 async function handleWatch(record: Recordable) {
   await watchPharmacyDrug(record.id)
-  if (record.wathc === 0)
+  if (record.wath === 0)
     createMessage.success(t('common.watchSuccessText'))
   else
     createMessage.success(t('common.cancelWatchSuccessText'))
@@ -86,11 +85,11 @@ function handleMarking(record: Recordable) {
   openMarkingModal(true, record)
 }
 
-async function handleRemoveMarking(record: Recordable) {
+/* async function handleRemoveMarking(record: Recordable) {
   await deleteDrugMarking(record.id)
   createMessage.success(t('common.removeSuccessText'))
   reload()
-}
+} */
 
 // 选中数量
 const deleteDisabled = computed<boolean>(() => {
@@ -132,7 +131,7 @@ async function handleDeleteBatch() {
           {{ t('action.export') }}
         </a-button>
       </template>
-      <template #expandedRowRender="{ record }">
+      <!--      <template #expandedRowRender="{ record }">
         <BasicTable
           :columns="markingDrugColumns" :data-source="record.drugInfos" :pagination="false" :action-column="{
             width: 200,
@@ -156,12 +155,13 @@ async function handleDeleteBatch() {
             </template>
           </template>
         </BasicTable>
-      </template>
+      </template> -->
       <template #bodyCell="{ column, record }">
         <template v-if="column.key === 'action'">
           <TableAction
             :actions="[
               { icon: IconEnum.TEST, label: record.watch === 0 ? '关注' : '取消关注', auth: 'lib:pharmacy-drug:update', onClick: handleWatch.bind(null, record) },
+              { icon: IconEnum.TEST, label: '标准品', auth: 'lib:pharmacy-drug:update', onClick: handleMarking.bind(null, record) },
             ]"
             :drop-down-actions="[
               { icon: IconEnum.EDIT, label: t('action.edit'), auth: 'lib:pharmacy-drug:update', onClick: handleEdit.bind(null, record) },
