@@ -7,12 +7,13 @@ import { deleteDrugMarking, getMarkingDrugYfPage, markingDrug } from '@/api/lib/
 import { BasicTable, TableAction, useTable } from '@/components/Table'
 import { IconEnum } from '@/enums/appEnum'
 import { useMessage } from '@/hooks/web/useMessage'
-import { Description, DescItem } from '@/components/Description';
+import type { DescItem } from '@/components/Description'
+import { Description } from '@/components/Description'
 
 defineOptions({ name: 'MarkingDrugModal' })
-const { createConfirm, createMessage } = useMessage()
+const emit = defineEmits(['success', 'register'])
+const { createMessage } = useMessage()
 const { t } = useI18n()
-
 const [registerTable, { reload }] = useTable({
   // title: '标准药品列表',
   api: getMarkingDrugYfPage,
@@ -64,6 +65,7 @@ async function handleRemoveMarking(record: Recordable) {
   createMessage.success(t('common.delSuccessText'))
   // 重加载表格
   reload()
+  emit('success')
 }
 const loading = ref(false)
 async function handleResetMarking() {
@@ -72,6 +74,7 @@ async function handleResetMarking() {
   loading.value = false
   createMessage.success('重新对标成功')
   reload()
+  emit('success')
 }
 </script>
 
@@ -83,7 +86,7 @@ async function handleResetMarking() {
   >
     <Description
       title="药品信息" :column="3"
-      :collapseOptions="{ canExpand: true, helpMessage: '药品基本信息' }"
+      :collapse-options="{ canExpand: true, helpMessage: '药品基本信息' }"
       :data="drugInfo"
       :schema="schema"
     />
@@ -109,6 +112,5 @@ async function handleResetMarking() {
         </template>
       </template>
     </BasicTable>
-
   </BasicModal>
 </template>

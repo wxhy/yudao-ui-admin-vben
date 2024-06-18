@@ -42,11 +42,24 @@ export const columns: BasicColumn[] = [
     title: '最新价格',
     dataIndex: 'otherPrice',
     width: 80,
-    customRender: ({ record, text }) => {
+    customRender: ({ record }) => {
+      console.log(record.drugInfos)
+      if (record.drugInfos.length !== 1)
+        return useRender.renderTag('-')
+      if (record.drugInfos[0].price < record.retailPrice)
+        return useRender.renderTag(record.drugInfos[0].price, '#d7003a')
+      return useRender.renderTag(record.drugInfos[0].price)
+    },
+  },
+  {
+    title: '在售商家',
+    dataIndex: 'shopCount',
+    width: 80,
+    customRender: ({ record }) => {
       console.log(record)
-      if (record.otherPrice < record.retailPrice)
-        return useRender.renderTag(text, '#d7003a')
-      return useRender.renderTag(text)
+      if (record.drugInfos && record.drugInfos.length > 1)
+        return record.drugInfos[0].shopCount
+      return '-'
     },
   },
   {
@@ -57,11 +70,14 @@ export const columns: BasicColumn[] = [
       return useRender.renderDict(text, DICT_TYPE.INFRA_INTEGER_STRING)
     },
   },
-  // {
-  //   title: '状态',
-  //   dataIndex: 'status',
-  //   width: 160,
-  // },
+  {
+    title: '状态',
+    dataIndex: 'status',
+    width: 160,
+    customRender: ({ text }) => {
+      return useRender.renderDict(text, DICT_TYPE.LIB_DRUG_CALIBRATION)
+    },
+  },
   {
     title: '备注',
     dataIndex: 'mark',

@@ -74,7 +74,7 @@ function handleImport() {
 
 async function handleWatch(record: Recordable) {
   await watchPharmacyDrug(record.id)
-  if (record.wath === 0)
+  if (record.watch === 0)
     createMessage.success(t('common.watchSuccessText'))
   else
     createMessage.success(t('common.cancelWatchSuccessText'))
