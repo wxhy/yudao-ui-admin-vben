@@ -56,8 +56,7 @@ export const columns: BasicColumn[] = [
     dataIndex: 'shopCount',
     width: 80,
     customRender: ({ record }) => {
-      console.log(record)
-      if (record.drugInfos && record.drugInfos.length > 1)
+      if (record.drugInfos.length === 1)
         return record.drugInfos[0].shopCount
       return '-'
     },
@@ -122,12 +121,13 @@ export const searchFormSchema: FormSchema[] = [
     },
   },
   {
-    label: '产品批次',
-    field: 'productBatch',
-    component: 'Input',
+    label: '状态',
+    field: 'status',
+    component: 'Select',
     colProps: { span: 8 },
     componentProps: {
-      placeholder: '请输入产品批次',
+      options: getDictOptions(DICT_TYPE.LIB_DRUG_CALIBRATION),
+      placeholder: '请选择状态',
     },
   },
   {
